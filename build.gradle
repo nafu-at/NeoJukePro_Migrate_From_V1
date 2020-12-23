@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+group 'page.nafuchoco'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'com.github.nafu-at:NeoJukePro:2.0.0-Beta1'
+}

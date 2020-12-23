@@ -1,0 +1,6 @@
+name: "NeoJukePro_Migrate_From_V1"
+version: 1.0.0
+authors: [ NAFU_at ]
+website: "https://toybox.nafuchoco.page/"
+main: "page.nafuchoco.neojukepro.migrate.NJPM4V1"
+requiredVersion: 2.0.0
