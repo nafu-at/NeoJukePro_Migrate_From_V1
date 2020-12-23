@@ -18,6 +18,7 @@ package page.nafuchoco.neojukepro.migrate;
 
 import page.nafuchoco.neojukepro.core.database.NeoGuildSettingsTable;
 import page.nafuchoco.neojukepro.core.guild.NeoGuildPlayerOptions;
+import page.nafuchoco.neojukepro.core.guild.NeoGuildSettings;
 import page.nafuchoco.neojukepro.core.module.NeoModule;
 
 import java.sql.SQLException;
@@ -51,6 +52,20 @@ public class NJPM4V1 extends NeoModule {
                     return;
                 }
 
+                try {
+                    neoGuildSettingsTable.registerGuildSettings(new NeoGuildSettings(
+                            getNeoJukePro(),
+                            neoGuildSettingsTable,
+                            guild,
+                            getNeoJukePro().getConfig().getBasicConfig().getPrefix(),
+                            false,
+                            false,
+                            new NeoGuildPlayerOptions(100, NeoGuildPlayerOptions.RepeatMode.NONE, false)
+                    ));
+                } catch (SQLException e) {
+                    getModuleLogger().warn("Failed to fetch data from SQL.", e);
+                }
+
                 Map<String, String> settings;
                 try {
                     settings = guildSettingsTable.getGuildSettings(guild);
@@ -76,7 +91,15 @@ public class NJPM4V1 extends NeoModule {
                                 break;
 
                             case "volume": {
-                                NeoGuildPlayerOptions playerOptions = neoGuildSettingsTable.getGuildSettings(guild).getPlayerOptions();
+                                NeoGuildSettings guildSettings = neoGuildSettingsTable.getGuildSettings(guild);
+                                NeoGuildPlayerOptions playerOptions;
+                                if (guildSettings == null)
+                                    playerOptions = new NeoGuildPlayerOptions(
+                                            100,
+                                            NeoGuildPlayerOptions.RepeatMode.NONE,
+                                            false);
+                                else
+                                    playerOptions = guildSettings.getPlayerOptions();
                                 NeoGuildPlayerOptions newPlayerOptions = new NeoGuildPlayerOptions(
                                         Integer.parseInt(setting.getValue()),
                                         playerOptions.getRepeatMode() == null ? NeoGuildPlayerOptions.RepeatMode.NONE : playerOptions.getRepeatMode(),
@@ -86,7 +109,15 @@ public class NJPM4V1 extends NeoModule {
                             }
 
                             case "repeat": {
-                                NeoGuildPlayerOptions playerOptions = neoGuildSettingsTable.getGuildSettings(guild).getPlayerOptions();
+                                NeoGuildSettings guildSettings = neoGuildSettingsTable.getGuildSettings(guild);
+                                NeoGuildPlayerOptions playerOptions;
+                                if (guildSettings == null)
+                                    playerOptions = new NeoGuildPlayerOptions(
+                                            100,
+                                            NeoGuildPlayerOptions.RepeatMode.NONE,
+                                            false);
+                                else
+                                    playerOptions = guildSettings.getPlayerOptions();
                                 NeoGuildPlayerOptions newPlayerOptions = new NeoGuildPlayerOptions(
                                         playerOptions.getVolumeLevel(),
                                         NeoGuildPlayerOptions.RepeatMode.valueOf(setting.getValue()),
